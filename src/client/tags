@@ -1,0 +1,19 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BUFFER_LENGTH	client.c	20;"	d	file:
+CFLAGS	Makefile	/^CFLAGS=-g -O0$/;"	m
+IP_LENGTH	client.c	19;"	d	file:
+MAX_EVENTS	client.c	18;"	d	file:
+count	client.c	/^int count = 0;$/;"	v
+do_use_fd	client.c	/^int do_use_fd()$/;"	f
+fds	client.c	/^int fds[MAX_EVENTS] = {0};$/;"	v
+main	client.c	/^int main(int argc, char **argv)$/;"	f
+nconnect	client.c	/^int nconnect = 0;$/;"	v
+quit	client.c	/^int quit = 0;$/;"	v
+reads	client.c	/^int reads(int fd)$/;"	f
+setnonblocking	client.c	/^int setnonblocking(int fd)$/;"	f
+writes	client.c	/^int writes(int fd)$/;"	f

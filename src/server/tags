@@ -1,0 +1,19 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BUFFER_LENGTH	server.c	21;"	d	file:
+CFLAGS	Makefile	/^CFLAGS=-g -O0$/;"	m
+MAX_EVENTS	server.c	20;"	d	file:
+del_fd	server.c	/^int del_fd(int fd)$/;"	f
+do_use_fd	server.c	/^int do_use_fd()$/;"	f
+fds	server.c	/^int fds[MAX_EVENTS] = {0};$/;"	v
+last	server.c	/^time_t last = 0;$/;"	v
+main	server.c	/^int main(int argc, char **argv)$/;"	f
+naccept	server.c	/^int naccept = 0;$/;"	v
+quit	server.c	/^int quit = 0;$/;"	v
+reads	server.c	/^int reads(int fd)$/;"	f
+setnonblocking	server.c	/^int setnonblocking(int fd)$/;"	f
+writes	server.c	/^int writes(int fd)$/;"	f
