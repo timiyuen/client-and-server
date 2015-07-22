@@ -1,8 +1,9 @@
-/**********************************
- * author: nibz@qq.com
- * Mon May  4 20:59:20 CST 2015
- * $ ./send 127.0.0.1 19999
- * ********************************/
+/*
+ * This is free software; see the source for copying conditions.  There is NO
+ * warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * Written by Ni Baozhu: <nibz@qq.com>.
+ */
 
 #include <stdio.h>
 #include <string.h>

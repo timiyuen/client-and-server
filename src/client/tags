@@ -4,10 +4,10 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-BUFFER_LENGTH	client.c	20;"	d	file:
-CFLAGS	Makefile	/^CFLAGS=-g -O0$/;"	m
-IP_LENGTH	client.c	19;"	d	file:
-MAX_EVENTS	client.c	18;"	d	file:
+BUFFER_LENGTH	client.c	21;"	d	file:
+CFLAGS	GNUmakefile	/^CFLAGS=-g -O0$/;"	m
+IP_LENGTH	client.c	20;"	d	file:
+MAX_EVENTS	client.c	19;"	d	file:
 count	client.c	/^int count = 0;$/;"	v
 do_use_fd	client.c	/^int do_use_fd()$/;"	f
 fds	client.c	/^int fds[MAX_EVENTS] = {0};$/;"	v
