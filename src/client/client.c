@@ -14,11 +14,13 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <netdb.h>
 
+extern 
 
 #define MAX_EVENTS (0xff)
 #define IP_LENGTH (0xf)
-#define BUFFER_LENGTH (0xff)
+#define BUFFER_LENGTH (0xffff)
 
 int setnonblocking(int fd);
 int reads(int fd);
@@ -47,8 +49,34 @@ int main(int argc, char **argv)
 
 		addr.sin_family = AF_INET;
 		addr.sin_port = htons(atoi(argv[2]));
-		retval = inet_pton(AF_INET, argv[1], (struct sockaddr *) &addr.sin_addr.s_addr);
-		if (retval != 1)
+
+		struct hostent *ht;
+		ht = gethostbyname(argv[1]);
+		if (ht == NULL)
+		{
+			herror("gethostbyname");
+			break;
+		}
+
+		char temp_addr[1024] = {0};
+		socklen_t slt = sizeof temp_addr;
+		char *ri;
+
+		// On success, inet_ntop() returns a non-null pointer to dst.  NULL is returned if there was an error, with errno set to indicate the error.
+		inet_ntop(AF_INET, (void *)*(ht->h_addr_list), temp_addr, slt);
+		if (temp_addr == NULL)
+		{
+			printf("%s\n", strerror(errno));
+			break;
+		}
+
+		retval = inet_pton(AF_INET, temp_addr, (struct sockaddr *) &addr.sin_addr.s_addr);
+		if (retval == 0)
+		{
+			printf("0 is returned if src does not contain a character string representing a valid network address in the specified address family.\n");
+			break;
+		}
+		else if (retval == -1)
 		{
 			printf("%s\n", strerror(errno));
 			break;
@@ -81,7 +109,7 @@ int main(int argc, char **argv)
 		}
 
 		//from ... to ...
-		printf("local %s:%d, remote %s:%d\n", local_ip, ntohs(local.sin_port), argv[1], ntohs(addr.sin_port));
+		printf("local %s:%d, remote %s:%d\n", local_ip, ntohs(local.sin_port), temp_addr, ntohs(addr.sin_port));
 
 		//set non blocking
 		retval = setnonblocking(fd);
@@ -99,8 +127,8 @@ int main(int argc, char **argv)
 
 		struct epoll_event ev, events[MAX_EVENTS];
 		ev.events = EPOLLIN | EPOLLET; //epoll edge triggered
-		//      ev.events = EPOLLIN | EPOLLOUT | EPOLLET; //epoll edge triggered
-		//      ev.events = EPOLLIN | EPOLLOUT; //epoll level triggered (default)
+		//      ev.events = EPOLLIN | EPOLLOUT | EPOLLET; // epoll edge triggered
+		//      ev.events = EPOLLIN | EPOLLOUT          ; // epoll level triggered (default)
 		ev.data.fd = fd;
 		retval = epoll_ctl(efd, EPOLL_CTL_ADD, fd, &ev);
 		if (retval == -1)
@@ -108,6 +136,8 @@ int main(int argc, char **argv)
 			printf("%s\n", strerror(errno));
 			break;
 		}
+
+		do_use_fd();
 
 		int n = 0;
 		while (1)
@@ -166,7 +196,7 @@ int main(int argc, char **argv)
 						break;
 					}
 
-					do_use_fd();
+//					do_use_fd();
 				}
 			}
 		}
@@ -192,7 +222,7 @@ int reads(int fd)
 			}
 			break;
 		}
-		printf("fd = %d, READ [%s]\n", fd, buffer);
+		printf("fd = %d, READ\n%s\n", fd, buffer);
 	} while (0);
 	count ++;
 	return retval;
@@ -205,7 +235,21 @@ int writes(int fd)
 	do {
 		char buffer[BUFFER_LENGTH];
 		memset(buffer, 0, sizeof buffer);
-		sprintf(buffer, "abcd");
+
+		sprintf(buffer,
+
+"GET / HTTP/1.1\r\n"
+"Host: %s\r\n"
+"Connection: keep-alive\r\n"
+"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n"
+"User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36\r\n"
+/*
+"Accept-Encoding: deflate, sdch\r\n"
+*/
+"Accept-Language: zh-CN,zh;q=0.8\r\n"
+"\r\n", "www.sina.com.cn");
+
+		puts(buffer);
 		size_t length = strlen(buffer);
 		retval = write(fd, buffer, length);
 		if (retval < 0)
