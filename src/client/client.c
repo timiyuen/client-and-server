@@ -16,8 +16,6 @@
 #include <fcntl.h>
 #include <netdb.h>
 
-extern 
-
 #define MAX_EVENTS (0xff)
 #define IP_LENGTH (0xf)
 #define BUFFER_LENGTH (0xffff)
@@ -246,7 +244,7 @@ int reads(int fd)
 			}
 			break;
 		}
-		printf("fd = %d\n%s\n", fd, buffer);
+		printf("fd = %d\n---response begin---\n%s\n---response end---\n", fd, buffer);
 	} while (0);
 	count ++;
 	return retval;
@@ -263,14 +261,10 @@ int writes(int fd, const char *uri, const char *host)
 		sprintf(buffer,
 
 "GET %s HTTP/1.1\r\n"
+"User-Agent: Wget/1.12 (linux-gnu)\r\n"
+"Accept: */*\r\n"
 "Host: %s\r\n"
-"Connection: keep-alive\r\n"
-"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n"
-"User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36\r\n"
-/*
-"Accept-Encoding: deflate, sdch\r\n"
-*/
-"Accept-Language: zh-CN,zh;q=0.8\r\n"
+"Connection: Keep-Alive\r\n"
 "\r\n", uri, host);
 
 		size_t length = strlen(buffer);
@@ -280,7 +274,7 @@ int writes(int fd, const char *uri, const char *host)
 			printf("%s\n", strerror(errno));
 			break;
 		}
-		printf("fd = %d\n%s\n", fd, buffer);
+		printf("fd = %d\n---request begin---\n%s---request end---\n", fd, buffer);
 	} while (0);
 	return retval;
 }
