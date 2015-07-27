@@ -24,24 +24,48 @@ extern
 
 int setnonblocking(int fd);
 int reads(int fd);
-int writes(int fd);
+int writes(int fd, const char *uri, const char *host);
 int do_use_fd();
 int count = 0;
 int quit = 0;
 int fds[MAX_EVENTS] = {0};
 int nconnect = 0;
 
+/////////////////
+char host[1024];
+char uri[1024] = "/";
+
+int usage(const char *argv0)
+{
+	printf("%s:%d:%s\n", __FILE__, __LINE__, __func__);
+	return printf("%s www.nibaozhu.cn 80 \"/project/index.html\"\n", argv0);
+}
+
 int main(int argc, char **argv)
 {
 	printf("%s:%d:%s\n", __FILE__, __LINE__, __func__);
 	int retval = 0;
 	do {
+		if (argc < 3)
+		{
+			usage(argv[0]);
+			break;
+		}
+
 		int fd = socket(AF_INET, SOCK_STREAM, 0);
 		if (fd < 0)
 		{
 			printf("%s\n", strerror(errno));
 			break;
 		}
+
+		///////////////
+		memset(host, 0, sizeof host);
+		memcpy(host, argv[1], sizeof host - 1);
+
+		///////////////
+		memset(uri, 0, sizeof uri);
+		memcpy(uri, argv[3], sizeof uri - 1);
 
 		struct sockaddr_in addr;
 		struct sockaddr_in local;
@@ -222,13 +246,13 @@ int reads(int fd)
 			}
 			break;
 		}
-		printf("fd = %d, READ\n%s\n", fd, buffer);
+		printf("fd = %d\n%s\n", fd, buffer);
 	} while (0);
 	count ++;
 	return retval;
 }
 
-int writes(int fd)
+int writes(int fd, const char *uri, const char *host)
 {
 	printf("%s:%d:%s\n", __FILE__, __LINE__, __func__);
 	int retval = 0;
@@ -238,7 +262,7 @@ int writes(int fd)
 
 		sprintf(buffer,
 
-"GET / HTTP/1.1\r\n"
+"GET %s HTTP/1.1\r\n"
 "Host: %s\r\n"
 "Connection: keep-alive\r\n"
 "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n"
@@ -247,9 +271,8 @@ int writes(int fd)
 "Accept-Encoding: deflate, sdch\r\n"
 */
 "Accept-Language: zh-CN,zh;q=0.8\r\n"
-"\r\n", "www.sina.com.cn");
+"\r\n", uri, host);
 
-		puts(buffer);
 		size_t length = strlen(buffer);
 		retval = write(fd, buffer, length);
 		if (retval < 0)
@@ -257,7 +280,7 @@ int writes(int fd)
 			printf("%s\n", strerror(errno));
 			break;
 		}
-		printf("fd = %d, write [%s]\n", fd, buffer);
+		printf("fd = %d\n%s\n", fd, buffer);
 	} while (0);
 	return retval;
 }
@@ -293,7 +316,7 @@ int do_use_fd()
 		int n;
 		for (n = 0; n < nconnect; n++)
 		{
-			retval = writes(fds[n]);
+			retval = writes(fds[n], uri, host);
 			if (retval < 0)
 			{
 				break;
