@@ -259,13 +259,15 @@ int writes(int fd, const char *uri, const char *host)
 		memset(buffer, 0, sizeof buffer);
 
 		sprintf(buffer,
-
+/* -http protocol request message header START- */
 "GET %s HTTP/1.1\r\n"
 "User-Agent: Wget/1.12 (linux-gnu)\r\n"
 "Accept: */*\r\n"
 "Host: %s\r\n"
 "Connection: Keep-Alive\r\n"
-"\r\n", uri, host);
+"\r\n"
+/* -http protocol request message header ENDED- */
+, uri, host);
 
 		size_t length = strlen(buffer);
 		retval = write(fd, buffer, length);
